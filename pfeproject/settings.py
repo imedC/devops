@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'eshop.apps.RestapiConfig',
-    'django_odoo_auth',
     'djstripe',
 ]
 
@@ -128,14 +127,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'django_odoo_auth.odoo_auth.backends.OdooBackend',
-)
-
-STRIPE_LIVE_PUBLIC_KEY = os.environ.get("STRIPE_LIVE_PUBLIC_KEY", "pk_test_s3qrWoHOlQlygU3gd4MQY15k")
-STRIPE_LIVE_SECRET_KEY = os.environ.get("STRIPE_LIVE_SECRET_KEY", "sk_test_pcHjx1PjarjCSUXEztg5a7Og")
-STRIPE_TEST_PUBLIC_KEY = os.environ.get("STRIPE_TEST_PUBLIC_KEY", "pk_test_s3qrWoHOlQlygU3gd4MQY15k")
-STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY", "sk_test_pcHjx1PjarjCSUXEztg5a7Og")
-STRIPE_LIVE_MODE = False
