@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>edit</title>
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<form enctype="multipart/form-data" method="post" action="">
+  {% csrf_token %}
+
+    <button class="btn btn-secondary">{{profile_form.avatar}}<i class="fa fa-upload" aria-hidden="true"></i> </button>
+
+    <div class="form-group ">
+        <button type="submit" id="button" class="btn btn-info btn-large login-button">Save changes</button>
+
+    </div>
+
+</form>
+</body>
+</html>

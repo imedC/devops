@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container" >
+					<div class="row">
+                    <div class="col-md-12 text-center">
+                    <h4><img class="" id="fogits" src="/static/img/logo.png" width="120"></h4>
+                    </div>
+                  </div>
+			<div class="row main" style="">
+				<div class="panel panel-default col-md-4 col-md-offset-4 main-login main-center"
+        style="padding-bottom:15px;">
+				<h5 class="pull-left" style="padding-top:35px;">Already have an account ?<a style="color: #24a593;" href="{% url 'eshop:login' %}"> Login Here</a></h5><hr style="width:100%;">
+
+					<form  method="post" role="form" action=""
+					 enctype="multipart/form-data">
+
+						{% csrf_token %}
+
+						<div class="form-group ">
+						<p><small style='color:#DC143C;'>{{ form.username.errors  }}</small></p>
+							<label for="id_username" class="cols-md-2 control-label">Your Username</label>
+
+							<div class="cols-md-10">
+								<div class="input-group has-success has-feedback">
+									<span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+									{{ form.username }}
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group ">
+						<p><small style='color:#DC143C;'>{{ form.email.errors }}</small></p>
+							<label for="id_email" class="cols-md-2 control-label">E-mail</label>
+
+							<div class="cols-md-10">
+								<div class="input-group has-success has-feedback">
+									<span class="input-group-addon"><i class="fa fa-at" aria-hidden="true"></i></span>
+									{{ form.email }}
+								</div>
+							</div>
+						</div>
+						<div class="form-group ">
+							<label for="id_password" class="cols-md-2 control-label">Password</label>
+							<div class="cols-md-10">
+								<div class="input-group has-success has-feedback">
+									<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+									{{ form.password }}
+								</div>
+							</div>
+						</div>
+
+
+								<p><small style='color:#DC143C;'>{{ form.password.errors }}</small></p>
+						<div class="form-group">
+							<label for="id_password2" class="cols-md-2 control-label">Confirm Password
+							</label>
+
+							<div class="cols-md-10">
+								<div class="input-group has-success has-feedback">
+									<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+									{{ form.password2 }}
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group ">
+							<button type="submit" id="register" class="btn btn-success  btn-block login-button" style="background-color:#7cd67c;" >Register</button>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+</body>
+</html>

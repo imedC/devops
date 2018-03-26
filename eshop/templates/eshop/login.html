@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post"  action="{% url 'eshop:home' %}">
+            {% csrf_token %}
+            <div class="form-group" style="padding-top:10px;">
+              <label class="control-label" for="id_username">Username</label>
+
+
+              <div class="form1 input-group has-success has-feedback ">
+            <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+              <input class="form-control" type="text" id="name" name="username"
+                placeholder="Your usename">
+              </div>
+
+
+            </div>
+            <div class="form-group"style="padding-top:15px;">
+              <label class="control-label" for="id_password">Password</label>
+              <div class="input-group has-success has-feedback">
+              <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+              <input class="form-control" type="password" id="id_password" name="password" placeholder="Your password">
+              </div>
+            </div>
+            <div style="padding-top:25px;">
+            <button type="submit" id="login"  class="btn btn-success btn-block" style="background:#7cd67c;">Sign in</button><hr>
+            Or you can Sing Up <a href="{% url 'eshop:register' %}" class="btn-link" style="color:#24a593;">here</a></div>
+          </form>
+</body>
+</html>
