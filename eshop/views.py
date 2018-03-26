@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from xmlrpc import client
 from django.contrib.auth import authenticate, login
-from django_odoo_auth.odoo_auth.models import OdooUser
 from django.contrib.auth.models import User
 from .forms import UserForm, ProfileForm
 from django.views.generic import View
