@@ -6,9 +6,9 @@ from .forms import UserForm, ProfileForm
 from django.views.generic import View
 from django.contrib import messages
 import base64
-import json
-from urllib.request import urlopen
 import xml.etree.ElementTree as ElementTree
+# import oerplib
+import odoorpc
 
 
 url = 'http://localhost:8069'
@@ -23,7 +23,7 @@ models = client.ServerProxy('{}/xmlrpc/2/object'.format(url))
 def home(request):
     record = models.execute_kw(db, uid, odoopassword,
                                'product.product', 'search_read', [[['create_uid', '=', 1]]],
-                               {'fields': ['id', 'test', 'description', 'image_medium', 'name', 'standard_price']})
+                               {'fields': ['id','description', 'image_medium', 'name', 'standard_price']})
 
     category = models.execute_kw(db, uid, odoopassword,
                                  'product.product', 'search_read', [[['create_uid', '=', 1]]],
@@ -52,19 +52,60 @@ def home(request):
                     models.execute_kw(db, uid, odoopassword,
                                   'sale.order', 'write', [[order],
                                                           {'order_line': [(0, 0, {'product_id': int(product)})]}])
+                    models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_confirm', [order])
             else:
 
                 # order_line =models.execute_kw(db, uid, odoopassword,
                 # 		  'sale.order', 'search',
                 # 		  [[['partner_id', '=', request.user.username]]])
                 for order in is_customer:
-                    models.execute_kw(db, uid, odoopassword,
+                    confirm = models.execute_kw(db, uid, odoopassword,
                               'sale.order', 'write', [[order],
                                                       {'order_line': [(0, 0, {'product_id': int(product)})]}])
-                #  request.POST.get(record[0]['name'],False)
 
+                models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_confirm', [order])
+                request.session['order'] = order
+                print (order)
+                return redirect('eshop:send')
     return render(request, 'eshop/home.html',
         		  {'product': record[:8], 'category': category, 'product_range': record[12:16], })
+
+def send_mail(request):
+    odoo = odoorpc.ODOO('localhost', port=8069)
+    print(odoo.db.list())
+    odoo.login('odifydb', 'admin', 'admin')
+    order = request.session['order']
+    if request.method =="POST":
+        models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_quotation_send', [[order]])
+        print ('order', order)
+        search_user_id = models.execute_kw(db, uid, odoopassword,
+                                           'res.partner', 'search',
+                                           [[['name', '=', request.user.username]]])
+        print ('search_user_id', search_user_id)
+        # partner_id = models.execute_kw(db, uid, odoopassword,'mail.compose.message',
+        #                                'search',[[]])
+        # for p in odoo.env['mail.compose.message'].browse(partner_id):
+        #     print('-----partner_ids-------', p)
+
+        # Order = odoo.env['mail.template']
+        # order_ids = Order.search([])
+        # for order in Order.browse(order_ids):
+        #     print('--------------------', order.name)
+        # TODO
+        # Search for mail template
+        template_id = models.execute_kw(db, uid, odoopassword,
+                                           'mail.template', 'search',
+                                           [[['name', 'ilike', 'Sales Order - Send by Email']]])
+        print ('-----template_id-------',template_id)
+        print ('-----order-------',order)
+        # Use send_mail function
+        #template = models.execute_kw(db, uid, odoopassword, 'mail.template', 'browse',[[order]])
+
+        Partner = odoo.env['mail.template'].browse(template_id).send_mail(order, force_send=True)
+        print('-----------partner-------------',Partner)
+
+    return render(request, 'eshop/send.html',)
+
 
 class UserFormView(View):
 

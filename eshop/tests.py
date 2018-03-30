@@ -21,16 +21,16 @@ class ProductModelTests(TestCase):
         #print ('____User____ :', request.user)
         print ('____product___ :', record[12:16])
 
-class ProfileTestCase(TestCase):
-
-    def setUp(self):
-        self.credentials = {
-            'username': 'testuser',
-            'password': 'secret'}
-        User.objects.create_user(**self.credentials)
-
-    def test_login(self):
-        # send login data
-        response = self.client.post('/login/', self.credentials, follow=True)
-        # should be logged in now
-        print(self.assertTrue(response.context['user'].is_authenticated))
+# class ProfileTestCase(TestCase):
+#
+#     def setUp(self):
+#         self.credentials = {
+#             'username': 'testuser',
+#             'password': 'secret'}
+#         User.objects.create_user(**self.credentials)
+#
+#     def test_login(self):
+#         # send login data
+#         response = self.client.post('/login/', self.credentials, follow=True)
+#         # should be logged in now
+#         print(self.assertTrue(response.context['user'].is_authenticated))

@@ -1,0 +1,10 @@
+{% extends 'eshop/base.html' %}
+
+{% block body %}
+
+thanks for the purchase
+<form  method="post" action="">
+  {% csrf_token %}
+ <button type="submit" id="button" class="btn btn-info btn-large">Get E-mail</button>
+</form>
+{% endblock %}
