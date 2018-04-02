@@ -2,7 +2,9 @@ from django.test import TestCase
 from xmlrpc import client
 from django.contrib.auth.models import User
 from .models import Profile
-
+import odoorpc
+odoo = odoorpc.ODOO('localhost', port=8069)
+odoo.login('odifydb', 'admin', 'admin')
 url = 'http://localhost:8069'
 db = 'odifydb'
 odooname = 'admin'
@@ -14,12 +16,27 @@ models = client.ServerProxy('{}/xmlrpc/2/object'.format(url))
 class ProductModelTests(TestCase):
 
     def test_product(self):
-        record = models.execute_kw(db, uid, odoopassword,
-                                   'product.product', 'search_read', [[['create_uid', '=', 1]]],
-                                   {'fields': ['id', 'description', 'name', 'standard_price']})
+        Taxe = odoo.env['product.product']
+        order_ids = Taxe.search([('name','=','Carte graphique')])
+        for order in Taxe.browse(order_ids):
+            print(order.lst_price)
+            p = odoo.env['sale.order.line']
+            p1= p.search([('product_id','=',int(order))])
+            for x in p.browse(p1):
+                print('________Taxe__________', x.price_unit)
+        # taxe = Taxe.browse(1)
+        # print(taxe.name)
+        # for t in taxe:
+        #     print('__________________', t.standard_price)
+        # z = odoo.env['product.product'].browse(taxe)
+        # print('________Taxe__________', odoo.env['account.invoice'].get_taxes_values(32))
 
-        #print ('____User____ :', request.user)
-        print ('____product___ :', record[12:16])
+        # record = models.execute_kw(db, uid, odoopassword,
+        #                            'product.product', 'search_read', [[['create_uid', '=', 1]]],
+        #                            {'fields': ['id', 'description', 'name', 'standard_price']})
+        #
+        # #print ('____User____ :', request.user)
+        # print ('____product___ :', record[12:16])
 
 # class ProfileTestCase(TestCase):
 #

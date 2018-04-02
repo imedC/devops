@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render, redirect, render_to_response, HttpResponseRedirect, reverse
 from xmlrpc import client
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -40,7 +40,9 @@ def home(request):
     for q in search_user_id:
         if request.method == "POST":
             product = request.POST.get('product')
+            #record1 = request.POST.get(record)
             print('_________product_____', product)
+            #print('_________product_____', record1)
             is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
                                     'search', [[['partner_id', '=', request.user.username]]])
             if not is_customer:
@@ -62,9 +64,10 @@ def home(request):
                     confirm = models.execute_kw(db, uid, odoopassword,
                               'sale.order', 'write', [[order],
                                                       {'order_line': [(0, 0, {'product_id': int(product)})]}])
-
+                    print ('--------confirm-------',confirm)
                 models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_confirm', [order])
                 request.session['order'] = order
+                request.session['product'] = product
                 print (order)
                 return redirect('eshop:send')
     return render(request, 'eshop/home.html',
@@ -74,39 +77,49 @@ def send_mail(request):
     odoo = odoorpc.ODOO('localhost', port=8069)
     print(odoo.db.list())
     odoo.login('odifydb', 'admin', 'admin')
+
     order = request.session['order']
-    if request.method =="POST":
+    product = request.session['product']
+    print('-------------record------------', product)
+    if request.method == "POST":
         models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_quotation_send', [[order]])
-        print ('order', order)
+        print('order', order)
         search_user_id = models.execute_kw(db, uid, odoopassword,
                                            'res.partner', 'search',
                                            [[['name', '=', request.user.username]]])
-        print ('search_user_id', search_user_id)
-        # partner_id = models.execute_kw(db, uid, odoopassword,'mail.compose.message',
-        #                                'search',[[]])
-        # for p in odoo.env['mail.compose.message'].browse(partner_id):
-        #     print('-----partner_ids-------', p)
-
-        # Order = odoo.env['mail.template']
-        # order_ids = Order.search([])
-        # for order in Order.browse(order_ids):
-        #     print('--------------------', order.name)
+        print('search_user_id', search_user_id)
         # TODO
         # Search for mail template
         template_id = models.execute_kw(db, uid, odoopassword,
-                                           'mail.template', 'search',
-                                           [[['name', 'ilike', 'Sales Order - Send by Email']]])
-        print ('-----template_id-------',template_id)
-        print ('-----order-------',order)
+                                        'mail.template', 'search',
+                                        [[['name', 'ilike', 'Sales Order - Send by Email']]])
+        print('-----template_id-------', template_id)
+        print('-----order-------', order)
         # Use send_mail function
-        #template = models.execute_kw(db, uid, odoopassword, 'mail.template', 'browse',[[order]])
+        # template = models.execute_kw(db, uid, odoopassword, 'mail.template', 'browse',[[order]])
 
         Partner = odoo.env['mail.template'].browse(template_id).send_mail(order, force_send=True)
-        print('-----------partner-------------',Partner)
-
-    return render(request, 'eshop/send.html',)
-
-
+        print('-----------partner-------------', Partner)
+        return HttpResponseRedirect("/send/")
+    purchase = models.execute_kw(db, uid, odoopassword,
+                                           'sale.order', 'search',
+                                           [[['name','=','SO077']]])
+    p = odoo.env['sale.order'].browse(purchase)
+    for pu in p:
+        print('--------purchase-------', pu.order_line.price_unit)
+        products = [line for line in pu.order_line]
+        print(products)
+        x = 0
+        y=0
+        for i in products:
+            x = x + (i.price_unit)
+            x = round(x,2)
+            print('---------somme price_unit----', x)
+        for i in products:
+            y = y + (i.product_id.lst_price)
+            print('---------somme lst_price----', y)
+        return render(request, 'eshop/send.html', {'product': products, 'somme':x,'lst_price':y})
+    return render(request,'eshop/send.html')
 class UserFormView(View):
 
 	form_class = UserForm
