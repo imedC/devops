@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^register/$', views.UserFormView.as_view(), name = 'register'),
     url(r'^edit/(?P<username>\w+)/$', views.update_profile, name='edit_profile'),
     url(r'^send/$', views.send_mail, name='send'),
+    url(r'^products/$', views.products, name='products'),
 
 ]

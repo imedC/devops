@@ -6,7 +6,7 @@ from .forms import UserForm, ProfileForm
 from django.views.generic import View
 from django.contrib import messages
 import base64
-import xml.etree.ElementTree as ElementTree
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # import oerplib
 import odoorpc
 
@@ -77,12 +77,15 @@ def send_mail(request):
     odoo = odoorpc.ODOO('localhost', port=8069)
     print(odoo.db.list())
     odoo.login('odifydb', 'admin', 'admin')
-
-    order = request.session['order']
-    product = request.session['product']
-    print('-------------record------------', product)
+    is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
+                                    'search', [[['partner_id', '=', request.user.username]]])
+    order = [order for order in is_customer]
+    print('-----is customer----', order)
+    #order = request.session['order']
+    #product = request.session['product']
+    #print('-------------record------------', product)
     if request.method == "POST":
-        models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_quotation_send', [[order]])
+        models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_quotation_send', order)
         print('order', order)
         search_user_id = models.execute_kw(db, uid, odoopassword,
                                            'res.partner', 'search',
@@ -97,18 +100,18 @@ def send_mail(request):
         print('-----order-------', order)
         # Use send_mail function
         # template = models.execute_kw(db, uid, odoopassword, 'mail.template', 'browse',[[order]])
-
-        Partner = odoo.env['mail.template'].browse(template_id).send_mail(order, force_send=True)
-        print('-----------partner-------------', Partner)
-        return HttpResponseRedirect("/send/")
+        for o in order:
+            Partner = odoo.env['mail.template'].browse(template_id).send_mail(o, force_send=True)
+            print('-----------partner-------------', Partner)
+            return HttpResponseRedirect("/send/")
     purchase = models.execute_kw(db, uid, odoopassword,
                                            'sale.order', 'search',
                                            [[['name','=','SO077']]])
-    p = odoo.env['sale.order'].browse(purchase)
+    p = odoo.env['sale.order'].browse(is_customer)
     for pu in p:
         print('--------purchase-------', pu.order_line.price_unit)
         products = [line for line in pu.order_line]
-        print(products)
+        print('----list product----',products)
         x = 0
         y=0
         for i in products:
@@ -120,6 +123,32 @@ def send_mail(request):
             print('---------somme lst_price----', y)
         return render(request, 'eshop/send.html', {'product': products, 'somme':x,'lst_price':y})
     return render(request,'eshop/send.html')
+
+def products(request):
+    category = models.execute_kw(db, uid, odoopassword,
+                                 'product.product', 'search_read', [[['create_uid', '=', 1]]],
+                                 {'fields': ['id', 'description', 'image_medium', 'name', 'lst_price', ]})
+
+    # x = [x.get('name','image_medium') for x in record]
+    # y = [y.get('name') for y in record]
+    x = [x.get('description', ) for x in category]
+    print ('____fff__', x)
+    # print '___IDS____', category
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(category, 9)
+    try:
+        cat = paginator.page(page)
+    except PageNotAnInteger:
+        cat = paginator.page(1)
+    except EmptyPage:
+        cat = paginator.page(paginator.num_pages)
+    #text = _("All Products")
+
+    return render(request, 'eshop/products.html',
+                  {'category': category, 'cat': cat})
+
+
 class UserFormView(View):
 
 	form_class = UserForm

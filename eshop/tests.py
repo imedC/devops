@@ -16,27 +16,31 @@ models = client.ServerProxy('{}/xmlrpc/2/object'.format(url))
 class ProductModelTests(TestCase):
 
     def test_product(self):
-        Taxe = odoo.env['product.product']
-        order_ids = Taxe.search([('name','=','Carte graphique')])
-        for order in Taxe.browse(order_ids):
-            print(order.lst_price)
-            p = odoo.env['sale.order.line']
-            p1= p.search([('product_id','=',int(order))])
-            for x in p.browse(p1):
-                print('________Taxe__________', x.price_unit)
-        # taxe = Taxe.browse(1)
-        # print(taxe.name)
-        # for t in taxe:
-        #     print('__________________', t.standard_price)
-        # z = odoo.env['product.product'].browse(taxe)
-        # print('________Taxe__________', odoo.env['account.invoice'].get_taxes_values(32))
+        # Taxe = odoo.env['product.product']
+        # order_ids = Taxe.search([('name','=','Carte graphique')])
+        # for order in Taxe.browse(order_ids):
+        #     print(order.lst_price)
+        #     p = odoo.env['sale.order.line']
+        #     p1= p.search([('product_id','=',int(order))])
+        #     for x in p.browse(p1):
+        #         print('________Taxe__________', x.price_unit)
+        is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
+                                        'search', [[['partner_id', '=', 'test']]])
+        p = odoo.env['sale.order'].browse(is_customer)
+        for pu in p:
+            #print('--------purchase-------', pu.order_line.price_unit)
+            products = [line for line in pu.order_line]
+            print('----list product----', products)
+            somme = 0
+            # name =""
+            for i in products:
+                price =i.price_unit
+                name = i.product_id.name
+                somme = somme + price
+                print('----name--: {} ---price--- : {}'.format(name,price))
+            print ('------Somme--------', round(somme,2))
 
-        # record = models.execute_kw(db, uid, odoopassword,
-        #                            'product.product', 'search_read', [[['create_uid', '=', 1]]],
-        #                            {'fields': ['id', 'description', 'name', 'standard_price']})
-        #
-        # #print ('____User____ :', request.user)
-        # print ('____product___ :', record[12:16])
+
 
 # class ProfileTestCase(TestCase):
 #
