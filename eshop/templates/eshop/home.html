@@ -4,15 +4,15 @@
 <div class="slider-area">
             <!-- Slider -->
             <div class="block-slider block-slider4">
-                <ul class="" id="bxslider-home4">
+                <ul class="" id="bxslider-home4" >
                     {%for p in product_range %}
                     <li>
 						<img src="data:image/png;base64,{{p.image_medium}}" id="imgcarousel" alt="Slide">
 						<div class="caption-group">
 							<h2 class="caption title">
-								<span class="primary">{{p.id}} <strong>{{p.name}}</strong></span>
+                                <span class="primary"><strong>{{p.name}}</strong></span>
 							</h2>
-							<h4 class="caption subtitle">{{p.name}}</h4>
+							<h4 class="caption subtitle">{{p.lst_price}}</h4>
 							<a class="caption button-radius" href="#"><span class="icon"></span>Shop now</a>
 						</div>
 					</li>
@@ -68,32 +68,23 @@
                                 <div class="product-f-image">
                                     <img src="data:image/png;base64,{{p.image_medium}}" alt="">
                                     <div class="product-hover">
-                                        <form action="" method="POST">
+                                        <form id="form-id"  action="" method="POST">
                                             {% csrf_token %}
-
-                                        <input type="hidden" name="product" value="{{p.id}}"/>
-
-                                            <script
-    class="stripe-button"
-    src="https://checkout.stripe.com/checkout.js"
-    data-key="pk_test_s3qrWoHOlQlygU3gd4MQY15k"
-    data-amount="{{p.standard_price}}"
-    data-name="{{p.name}}"
-    data-description="Example charge"
-    data-image="data:image/png;base64,{{p.image_medium}}"
-    data-locale="auto">
-                                                <i class="fa fa-shopping-cart"></i>
-  </script>
-
+                                            <input type="hidden" name="product" value="{{p.id}}">
+<a href="#" onclick="document.getElementById('form-id').submit();"  class="add-to-cart-link" >
+    Submit </a>
+                                            <!--<button type="submit" name="product" value="{{p.id}}" class="add-to-cart-link">-->
+                                            <!--<i class="fa fa-shopping-cart"></i>-->
+                                                <!--Add to cart</button>-->
                                         </form>
-                                        <a href="single-product.html" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                                        <a href="#" class="view-details-link"><i class="fa fa-link"></i> See details</a>
                                     </div>
                                 </div>
                                 
                                 <h2><a href="single-product.html">{{p.name}}</a></h2>
                                 
                                 <div class="product-carousel-price">
-                                    <ins>{{p.standard_price}}</ins>
+                                    <ins>{{p.lst_price}}</ins>
                                 </div>
 
                             </div>
@@ -112,14 +103,14 @@
                 <div class="col-md-12">
                     <div class="brand-wrapper">
                         <div class="brand-list">
-                            <img src="img/brand1.png" alt="">
-                            <img src="img/brand2.png" alt="">
-                            <img src="img/brand3.png" alt="">
-                            <img src="img/brand4.png" alt="">
-                            <img src="img/brand5.png" alt="">
-                            <img src="img/brand6.png" alt="">
-                            <img src="img/brand1.png" alt="">
-                            <img src="img/brand2.png" alt="">                            
+                            <img src="{% static 'eshop/img/brand5.png' %}" alt="">
+                            <img src="{% static 'eshop/img/brand2.png' %}" alt="">
+                            <img src="{% static 'eshop/img/brand3.png' %}" alt="">
+                            <img src="{% static 'eshop/img/brand4.png' %}" alt="">
+                            <img src="{% static 'eshop/img/brand1.png' %}" alt="">
+                            <img src="{% static 'eshop/img/brand6.png' %}" alt="">
+                            <img src="{% static 'eshop/img/brand1.png' %}" alt="">
+                            <img src="{% static 'eshop/img/brand2.png' %}" alt="">
                         </div>
                     </div>
                 </div>
@@ -136,7 +127,7 @@
                         <h2 class="product-wid-title">Top Sellers</h2>
                         <a href="" class="wid-view-more">View All</a>
                         <div class="single-wid-product">
-                            <a href="single-product.html"><img src="img/product-thumb-1.jpg" alt="" class="product-thumb"></a>
+                            <a href="single-product.html"><img src="{% static 'eshop/img/product-thumb-1.jpg' %}" alt="" class="product-thumb"></a>
                             <h2><a href="single-product.html">Sony Smart TV - 2015</a></h2>
                             <div class="product-wid-rating">
                                 <i class="fa fa-star"></i>
@@ -150,7 +141,7 @@
                             </div>                            
                         </div>
                         <div class="single-wid-product">
-                            <a href="single-product.html"><img src="img/product-thumb-2.jpg" alt="" class="product-thumb"></a>
+                            <a href="single-product.html"><img src="{% static 'eshop/img/product-thumb-2.jpg' %}" alt="" class="product-thumb"></a>
                             <h2><a href="single-product.html">Apple new mac book 2015</a></h2>
                             <div class="product-wid-rating">
                                 <i class="fa fa-star"></i>
@@ -164,7 +155,7 @@
                             </div>                            
                         </div>
                         <div class="single-wid-product">
-                            <a href="single-product.html"><img src="img/product-thumb-3.jpg" alt="" class="product-thumb"></a>
+                            <a href="single-product.html"><img src="{% static 'eshop/img/product-thumb-3.jpg' %}" alt="" class="product-thumb"></a>
                             <h2><a href="single-product.html">Apple new i phone 6</a></h2>
                             <div class="product-wid-rating">
                                 <i class="fa fa-star"></i>
@@ -184,7 +175,7 @@
                         <h2 class="product-wid-title">Recently Viewed</h2>
                         <a href="#" class="wid-view-more">View All</a>
                         <div class="single-wid-product">
-                            <a href="single-product.html"><img src="img/product-thumb-4.jpg" alt="" class="product-thumb"></a>
+                            <a href="single-product.html"><img src="{% static 'eshop/img/product-thumb-4.jpg' %}" alt="" class="product-thumb"></a>
                             <h2><a href="single-product.html">Sony playstation microsoft</a></h2>
                             <div class="product-wid-rating">
                                 <i class="fa fa-star"></i>
@@ -198,7 +189,7 @@
                             </div>                            
                         </div>
                         <div class="single-wid-product">
-                            <a href="single-product.html"><img src="img/product-thumb-1.jpg" alt="" class="product-thumb"></a>
+                            <a href="single-product.html"><img src="{% static 'eshop/img/product-thumb-1.jpg' %}" alt="" class="product-thumb"></a>
                             <h2><a href="single-product.html">Sony Smart Air Condtion</a></h2>
                             <div class="product-wid-rating">
                                 <i class="fa fa-star"></i>
@@ -212,7 +203,7 @@
                             </div>                            
                         </div>
                         <div class="single-wid-product">
-                            <a href="single-product.html"><img src="img/product-thumb-2.jpg" alt="" class="product-thumb"></a>
+                            <a href="single-product.html"><img src="{% static 'eshop/img/product-thumb-2.jpg' %}" alt="" class="product-thumb"></a>
                             <h2><a href="single-product.html">Samsung gallaxy note 4</a></h2>
                             <div class="product-wid-rating">
                                 <i class="fa fa-star"></i>
@@ -232,7 +223,7 @@
                         <h2 class="product-wid-title">Top New</h2>
                         <a href="#" class="wid-view-more">View All</a>
                         <div class="single-wid-product">
-                            <a href="single-product.html"><img src="img/product-thumb-3.jpg" alt="" class="product-thumb"></a>
+                            <a href="single-product.html"><img src="{% static 'eshop/img/product-thumb-3.jpg' %}" alt="" class="product-thumb"></a>
                             <h2><a href="single-product.html">Apple new i phone 6</a></h2>
                             <div class="product-wid-rating">
                                 <i class="fa fa-star"></i>
@@ -246,7 +237,7 @@
                             </div>                            
                         </div>
                         <div class="single-wid-product">
-                            <a href="single-product.html"><img src="img/product-thumb-4.jpg" alt="" class="product-thumb"></a>
+                            <a href="single-product.html"><img src="{% static 'eshop/img/product-thumb-4.jpg' %}" alt="" class="product-thumb"></a>
                             <h2><a href="single-product.html">Samsung gallaxy note 4</a></h2>
                             <div class="product-wid-rating">
                                 <i class="fa fa-star"></i>
@@ -260,7 +251,7 @@
                             </div>                            
                         </div>
                         <div class="single-wid-product">
-                            <a href="single-product.html"><img src="img/product-thumb-1.jpg" alt="" class="product-thumb"></a>
+                            <a href="single-product.html"><img src="{% static 'eshop/img/product-thumb-1.jpg' %}" alt="" class="product-thumb"></a>
                             <h2><a href="single-product.html">Sony playstation microsoft</a></h2>
                             <div class="product-wid-rating">
                                 <i class="fa fa-star"></i>

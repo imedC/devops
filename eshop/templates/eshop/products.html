@@ -23,9 +23,9 @@
                         <img src="data:image/png;base64,{{c.image_medium}}" alt="">
                     </div>
                     <h2>
-                        <a href="">{{c.name}}</a>
+                        <a class="pr-name" href="">{{c.name}}</a>
                     </h2>
-                    <div class="product-carousel-price">
+                    <div class=" product-carousel-price">
                         <ins>{{c.lst_price}}</ins>
                     </div>
 
@@ -33,7 +33,7 @@
                         {% if user.is_authenticated %}
                         <button class="snipcart-add-item"
                                 type="submit">
-                            shop
+                            Add to cart
                         </button>
                         {%else%}
                         <button class="snipcart-add-item"
@@ -42,7 +42,7 @@
                                 data-item-price="{{list_price}}"
                                 data-item-url="http://5ea5792a.ngrok.io/fr/all_products/"
                                 data-item-description="{{descr}}" type="submit">
-                            Add to cart
+                            Connect to shop
                         </button>
                         {%endif%}
                     </div>
@@ -64,7 +64,7 @@
                             {% endif %}
                             {% for i in cat.paginator.page_range %}
                             {% if cat.number == i %}
-                            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                            <li class="active"><span class="ss">{{ i }} <span class="sr-only">(current)</span></span></li>
                             {% else %}
                             <li><a href="?page={{ i }}">{{ i }}</a></li>
                             {% endif %}

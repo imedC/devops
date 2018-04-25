@@ -1,80 +1,88 @@
-<!DOCTYPE html>
+ <!doctype html>
+
+<!--
+    ustora by freshdesignweb.com
+    Twitter: https://twitter.com/freshdesignweb
+    URL: https://www.freshdesignweb.com/ustora/
+-->
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fogits Solutions</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+   <link rel="stylesheet" href="/static/eshop/css/bootstrap.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/static/eshop/css/font-awesome.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/eshop/css/login.css" >
+ <title>Admin</title>
+    </head>
+
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 <body>
-<div class="container" >
-					<div class="row">
-                    <div class="col-md-12 text-center">
-                    <h4><img class="" id="fogits" src="/static/img/logo.png" width="120"></h4>
+<div class="container">
+   <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+<p><small style='color:#DC143C;'>{{ form.password.errors }}</small></p>
+      <div class="panel panel-login">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <form id="register-form" action="#" method="post" role="form" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {{ form.password.errors }}
+                <h2>REGISTER</h2>
+                  <div class="form-group">
+                    {{ form.username }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.email }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.password }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.password2 }}
+                  </div>
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-sm-6 col-sm-offset-3">
+                        <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Register Now">
+                      </div>
                     </div>
                   </div>
-			<div class="row main" style="">
-				<div class="panel panel-default col-md-4 col-md-offset-4 main-login main-center"
-        style="padding-bottom:15px;">
-				<h5 class="pull-left" style="padding-top:35px;">Already have an account ?<a style="color: #24a593;" href="{% url 'eshop:login' %}"> Login Here</a></h5><hr style="width:100%;">
-
-					<form  method="post" role="form" action=""
-					 enctype="multipart/form-data">
-
-						{% csrf_token %}
-
-						<div class="form-group ">
-						<p><small style='color:#DC143C;'>{{ form.username.errors  }}</small></p>
-							<label for="id_username" class="cols-md-2 control-label">Your Username</label>
-
-							<div class="cols-md-10">
-								<div class="input-group has-success has-feedback">
-									<span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
-									{{ form.username }}
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group ">
-						<p><small style='color:#DC143C;'>{{ form.email.errors }}</small></p>
-							<label for="id_email" class="cols-md-2 control-label">E-mail</label>
-
-							<div class="cols-md-10">
-								<div class="input-group has-success has-feedback">
-									<span class="input-group-addon"><i class="fa fa-at" aria-hidden="true"></i></span>
-									{{ form.email }}
-								</div>
-							</div>
-						</div>
-						<div class="form-group ">
-							<label for="id_password" class="cols-md-2 control-label">Password</label>
-							<div class="cols-md-10">
-								<div class="input-group has-success has-feedback">
-									<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
-									{{ form.password }}
-								</div>
-							</div>
-						</div>
-
-
-								<p><small style='color:#DC143C;'>{{ form.password.errors }}</small></p>
-						<div class="form-group">
-							<label for="id_password2" class="cols-md-2 control-label">Confirm Password
-							</label>
-
-							<div class="cols-md-10">
-								<div class="input-group has-success has-feedback">
-									<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
-									{{ form.password2 }}
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group ">
-							<button type="submit" id="register" class="btn btn-success  btn-block login-button" style="background-color:#7cd67c;" >Register</button>
-						</div>
-
-					</form>
-				</div>
-			</div>
-		</div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-6 tabs">
+              <a href="{% url 'eshop:login' %}"  class="active" id="login-form-link"><div class="login">LOGIN</div></a>
+            </div>
+            <div class="col-xs-6 tabs">
+              <a href="" id="register-form-link"><div class="register">REGISTER</div></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>
+    <div class="container">
+        <div class="col-md-10 col-md-offset-1 text-center">
+            <h6 style="font-size:14px;font-weight:100;color: #fff;">Fogits <i class="fa fa-heart red" style="color: #BC0213;"></i> by <a href="http://hashif.com" style="color: #fff;" target="_blank">Solutions</a></h6>
+        </div>
+    </div>
+</footer>
+<script src="/static/eshop/js/login.js"></script>
 </body>
-</html>

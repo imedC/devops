@@ -1,5 +1,7 @@
 from django.test import TestCase
 from xmlrpc import client
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium.webdriver.firefox.webdriver import WebDriver
 from django.contrib.auth.models import User
 from .models import Profile
 import odoorpc
@@ -12,36 +14,65 @@ odoopassword = 'admin'
 common = client.ServerProxy('{}/xmlrpc/2/common'.format(url))
 uid = common.authenticate(db, odooname, odoopassword, {})
 models = client.ServerProxy('{}/xmlrpc/2/object'.format(url))
-# Create your tests here.
+
+# class MySeleniumTests(StaticLiveServerTestCase):
+#
+#
+#     @classmethod
+#     def setUpClass(cls):
+#         super().setUpClass()
+#         cls.selenium = WebDriver()
+#         cls.selenium.implicitly_wait(10)
+#
+#     @classmethod
+#     def tearDownClass(cls):
+#         cls.selenium.quit()
+#         super().tearDownClass()
+#
+#     def test_login(self):
+#         self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+#         username_input = self.selenium.find_element_by_name("username")
+#         username_input.send_keys('myuser')
+#         password_input = self.selenium.find_element_by_name("password")
+#         password_input.send_keys('secret')
+#         self.selenium.find_element_by_xpath('//input[@value="Log In"]').click()
+
 class ProductModelTests(TestCase):
 
     def test_product(self):
-        # Taxe = odoo.env['product.product']
-        # order_ids = Taxe.search([('name','=','Carte graphique')])
-        # for order in Taxe.browse(order_ids):
-        #     print(order.lst_price)
-        #     p = odoo.env['sale.order.line']
-        #     p1= p.search([('product_id','=',int(order))])
-        #     for x in p.browse(p1):
-        #         print('________Taxe__________', x.price_unit)
-        is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
-                                        'search', [[['partner_id', '=', 'test']]])
-        p = odoo.env['sale.order'].browse(is_customer)
-        for pu in p:
-            #print('--------purchase-------', pu.order_line.price_unit)
-            products = [line for line in pu.order_line]
-            print('----list product----', products)
-            somme = 0
-            # name =""
-            for i in products:
-                price =i.price_unit
-                name = i.product_id.name
-                somme = somme + price
-                print('----name--: {} ---price--- : {}'.format(name,price))
-            print ('------Somme--------', round(somme,2))
 
 
+        # is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
+        #                                 'search', [[['partner_id', '=', 'test']]])
+        # order = [order for order in is_customer]
+        # p = odoo.env['sale.order'].browse(is_customer)
+        # for pu in p:
+        #     #print('--------purchase-------', pu.order_line.price_unit)
+        #     products = [line for line in pu.order_line]
+        #     print('----list product----', products)
+        #     somme = 0
+        #     # name =""
+        #     for i in products:
+        #         price =i.price_unit
+        #         name = i.product_id.name
+        #         somme = somme + price
+        #         print('----list product id----', i.id)
+        #         print('----name--: {} ---price--- : {}'.format(name,price))
+        #     print ('------Somme--------', round(somme,2))
+        # models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_cancel', order)
+        # models.execute_kw(db, uid, odoopassword,
+        #                   'sale.order', 'write', [order,
+        #                                           {'order_line': [(2, 234, False)]}])
 
+        aa = models.execute_kw(db, uid, odoopassword, 'res.partner',
+                                       'search', [[['name', '=', 'test']]])
+        p = odoo.env['res.partner'].browse(aa)
+        # print ('-----title------',p )
+        x = models.execute_kw(db, uid, odoopassword,
+                           'res.partner.title', 'search_read', [[]], {'fields': ['name']})
+        models.execute_kw(db, uid, odoopassword, 'res.partner.title', 'unlink', [8])
+
+        print ('-----title------',x )
 # class ProfileTestCase(TestCase):
 #
 #     def setUp(self):

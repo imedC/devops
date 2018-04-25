@@ -1,108 +1,82 @@
 {% extends 'eshop/base.html' %}
 
+
+
 {% block body %}
- <!-- Bootstrap CSS-->
-
-    <div class="container" style="padding-top:20px;">
-	<div class="row">
-		<div class="col-xs-offset-1 col-xs-10">
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<div class="panel-title">
-						<div class="row">
-							<div class="col-xs-6">
-								<h5><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart</h5>
-							</div>
-							<div class="col-xs-6">
-								<button type="button" class="btn btn-primary btn-sm btn-block">
-									<span class="glyphicon glyphicon-share-alt"></span> Continue shopping
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="panel-body">
-					<div class="row">
-						<div class="col-xs-2">
-						</div>
-						<div class="col-xs-4">
-							<h4 class="product-name"><strong>PRODUCT</strong></h4>
-						</div>
-						<div class="col-xs-6">
-							<div class="col-xs-4 text-right">
-								<h4><strong>lst_price</strong></h4>
-							</div>
-							<div class="col-xs-4 text-right">
-								<h4><strong>price_unit</strong></h4>
-							</div>
-						</div>
-
-
-					</div>
-					<hr>
+<br>
+<div class="container mb-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col"> </th>
+                            <th scope="col">Product</th>
+                            <th scope="col" class="text-center">Quantity</th>
+                            <th scope="col" class="text-center">Total price</th>
+                            <th scope="col" class="text-right">Untaxed Amount</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
 					{%for p in product %}
-					<div class="row rmrow">
-						<div class="col-xs-2"><img class="img-responsive" src="data:image/png;base64,{{p.product_id.image_medium}}">
-						</div>
-						<div class="col-xs-4">
-							<h4 class="product-name"><strong>{{p.product_id.name}}</strong></h4><h4><small>Product description</small></h4>
-						</div>
-						<div class="col-xs-6">
-							<div class="col-xs-4 text-right">
-								<h4><strong>{{p.product_id.lst_price}}</strong></h4>
-							</div>
-							<div class="col-xs-4 text-right">
-								<h4><strong>{{p.price_unit}}</strong></h4>
-							</div>
-							<div class="col-xs-4">
-								<button type="button" class="btn btn-link btn-xs">
-									<span class="remove glyphicon glyphicon-trash"> </span>
-								</button>
-							</div>
-						</div>
-					</div>
-					<hr>
-{%endfor%}
-
-					<div class="row">
-						<div class="text-center">
-							<div class="col-xs-9">
-								<h6 class="text-right">Added items?</h6>
-							</div>
-							<div class="col-xs-3">
-								<button type="button" class="btn btn-default btn-sm btn-block">
-									Update cart
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="panel-footer">
-					<div class="row text-center">
-						<div class="col-xs-9">
-							<h4 class="text-right">Total <strong>{{lst_price}}///{{somme}} </strong></h4>
-						</div>
-						<div class="col-xs-3">
-							<form  method="post" action="">
-  								{% csrf_token %}
-							<button type="submit" id="button" class="btn btn-success btn-block">
-								Checkout
-							</button>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                        <tr>
+                            <td><img src="data:image/png;base64,{{p.product_id.image_medium}}" width="60" height="60" /> </td>
+                            <td>{{p.product_id.name}}</td>
+                            <td><input class="form-control" type="text" value="1" /></td>
+                            <td class="text-center" >{{p.product_id.lst_price}} €</td>
+                            <td class="text-right">{{p.price_unit}} €</td>
+                            <td class="text-right">
+								<form method="POST">
+									{% csrf_token %}
+									<button type="submit" name="delete"  class="btn btn-sm btn-danger"><i class="fa fa-trash"></i>
+									<input type="hidden" name="del" value="{{p.id}}"/>
+									</button></form> </td>
+                        </tr>
+					{%endfor%}
+                        <!--<tr>-->
+                            <!--<td></td>-->
+                            <!--<td></td>-->
+                            <!--<td></td>-->
+                            <!--<td></td>-->
+                            <!--<td>Sub-Total</td>-->
+                            <!--<td class="text-right">255,90 €</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td></td>-->
+                            <!--<td></td>-->
+                            <!--<td></td>-->
+                            <!--<td></td>-->
+                            <!--<td>Shipping</td>-->
+                            <!--<td class="text-right">6,90 €</td>-->
+                        <!--</tr>-->
+                        <tr>
+                            <td><strong style="font-size:20px;">Total</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-center"><strong>{{lst_price}} €</strong></td>
+                            <td class="text-right"><strong>{{somme}} €</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <div class="row">
+                <div class="col-sm-12  col-md-6">
+                    <button type="button" onclick="location.href='{% url 'eshop:home' %}'"  class="btn btn-block btn-light">Continue Shopping</button>
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                <div class="col-sm-12 col-md-6 text-right">
+                    <button type="submit" name="send_mail" class="check checkout btn btn-lg btn-block btn-success text-uppercase">Checkout</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-{% endblock %}
-
-{% block script %}
-<script src="https://code.jquery.com/jquery.min.js"></script>
-<script>
-$( ".remove" ).click(function() {
- $( ".rmrow" ).remove();
-});
-</script>
+<br>
 {% endblock %}

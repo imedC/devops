@@ -6,14 +6,24 @@ from django.db.models.signals import post_save
 
 
 class Profile(models.Model):
-
+    # MONSIEUR= 'Monsieur'
+    # MADEMOISELLE= 'Mlle'
+    # DOCTEUR= 'Dr'
+    # Title = (
+    #     (MONSIEUR, 'Monsieur'),
+    #     (MADEMOISELLE, 'Mademoiselle'),
+    #     (DOCTEUR, 'Docteur'),
+    # )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.FileField(blank=True)
     #cover = models.FileField(blank=True)
-    #bio = models.TextField(max_length=500, blank=True)
-    #location = models.TextField(max_length=200, blank=True)
+    #bio = models.ManyToManyField(max_length=500, blank=True)
+    street = models.CharField(max_length=200, blank=True)
+    title = models.CharField(max_length=200)
+    city = models.CharField(max_length=200, blank=True)
+    mobile = models.IntegerField(blank=True,null=True)
     #bd = models.FileField(blank=True, null=True)
-    #job = models.FileField(blank=True)
+    job = models.CharField(max_length=200,blank=True)
 
     def get_queryset(self):
         user = User.objects.get(username=self.kwargs['username'])

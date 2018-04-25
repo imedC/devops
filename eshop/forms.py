@@ -48,6 +48,17 @@ class UserForm(forms.ModelForm):
 
 
 class ProfileForm(forms.ModelForm):
+    job = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    street = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    city = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    title = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    mobile = forms.IntegerField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     class Meta:
         model = Profile
-        fields = ('avatar',)
+        fields = ('avatar','street','city','mobile','job','title')
+
