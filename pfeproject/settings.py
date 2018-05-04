@@ -27,7 +27,7 @@ SECRET_KEY = 'u8h_(j0vo1cw@l)tvy&=k+6@vlw1(veg%7wp+8f+6#g&$-l&rn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['djangofy','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['fogits','localhost','127.0.0.1',]
 
 LOGIN_REDIRECT_URL = '/home/'
 LOGIN_URL = '/login/'

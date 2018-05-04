@@ -16,6 +16,8 @@ url = 'http://localhost:8069'
 db = 'odifydb'
 odooname = 'admin'
 odoopassword = 'admin'
+odoo = odoorpc.ODOO('localhost', port=8069)
+odoo.login('odifydb', 'admin', 'admin')
 # returns user objects if credentials are correct
 common = client.ServerProxy('{}/xmlrpc/2/common'.format(url))
 uid = common.authenticate(db, odooname, odoopassword, {})
@@ -32,14 +34,9 @@ def home(request):
     x = [x.get('id', ) for x in record]
     # print '____fff__', x
     print ('______username:_______',request.user)
-    search_user_id = models.execute_kw(db, uid, odoopassword,
-                                       'res.partner', 'search',
-                                       [[['name', '=', request.user.username]]])
-    odoo = odoorpc.ODOO('localhost', port=8069)
-    odoo.login('odifydb', 'admin', 'admin')
+    search_user_id = odoo.env['res.partner'].search([['name', '=', request.user.username]])
 
-    customer_fac = models.execute_kw(db, uid, odoopassword,
-                          'account.invoice', 'search', [[['number','=', 'INV/2018/0005']]])
+    customer_fac = odoo.env['account.invoice'].search([['number','=', 'INV/2018/0005']])
     x = odoo.env['account.invoice'].browse(customer_fac)
     for  i in x:
         print(i.invoice_line_ids)
@@ -51,18 +48,19 @@ def home(request):
     print ('record:_______',record[6]['id'])
     for q in search_user_id:
         if request.method == 'POST':
-            product = request.POST.get('product')
+            product = request.POST['product']
+            product_name = request.POST['product_name']
+            product_price = request.POST['product_price']
             #record1 = request.POST.get(record)
             print('_________product_____', product)
             #print('_________product_____', record1)
-            is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
-                                    'search', [[['partner_id', '=', request.user.username]]])
+            is_customer = odoo.env['sale.order'].search([['partner_id', '=', request.user.username]])
+            facture_search = odoo.env['account.invoice'].search([['partner_id', '=', request.user.username]])
 
             if not is_customer:
                 models.execute_kw(db, uid, odoopassword,
                           'sale.order', 'create', [{'partner_id': q}])
-                customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
-                                  'search', [[['partner_id', '=', request.user.username]]])
+                customer = odoo.env['sale.order'].search([['partner_id', '=', request.user.username]])
                 for order in customer:
                     models.execute_kw(db, uid, odoopassword,
                                   'sale.order', 'write', [[order],
@@ -77,11 +75,19 @@ def home(request):
                     confirm = models.execute_kw(db, uid, odoopassword,
                               'sale.order', 'write', [[order],
                                                       {'order_line': [(0, 0, {'product_id': int(product)})]}])
-                models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_confirm', [order])
-                request.session['order'] = order
-                request.session['product'] = product
-                print (order)
-                return redirect('eshop:send')
+                    customer_fac = models.execute_kw(db, uid, odoopassword,
+                                                     'account.invoice', 'search', [[['number', '=', 'INV/2018/0006']]])
+                    x = odoo.env['account.invoice'].browse(customer_fac)
+                    for i in x:
+                        print('-------invoice------',i.invoice_line_ids.name)
+                    aa = x.read(['invoice_line_ids'])
+                    print('-----aaa-----', aa)
+                    # x.write({'invoice_line_ids': [(0, 0, {'name':int(product).name,'account_id': 1,'price_unit': 500 })]})
+                    models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_confirm', [order])
+                    request.session['order'] = order
+                    request.session['product'] = product
+                # print (order)
+                    return redirect('eshop:send')
     return render(request, 'eshop/home.html',
                   {'product': record[:8], 'category': category, 'product_range': record[12:16], })
 
@@ -91,9 +97,12 @@ def send_mail(request):
     odoo = odoorpc.ODOO('localhost', port=8069)
     print(odoo.db.list())
     odoo.login('odifydb', 'admin', 'admin')
-    is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
-                                    'search', [[['partner_id', '=', request.user.username]]])
+    facture_search = models.execute_kw(db, uid, odoopassword,
+                                       'account.invoice', 'search', [[['partner_id', '=', request.user.username]]])
+
+    is_customer = odoo.env['sale.order'].search([['partner_id', '=', request.user.username]])
     order = [order for order in is_customer]
+    facture = [facture for facture in facture_search]
     print('-----is customer----', order)
     #order = request.session['order']
     # product = request.session['product']
@@ -105,9 +114,7 @@ def send_mail(request):
 
         models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_quotation_send', order)
         print('order', order)
-        search_user_id = models.execute_kw(db, uid, odoopassword,
-                                           'res.partner', 'search',
-                                           [[['name', '=', request.user.username]]])
+        search_user_id = odoo.env['res.partner'].search([['partner_id', '=', request.user.username]])
         print('search_user_id', search_user_id)
         # TODO
         # Search for mail template
@@ -127,29 +134,31 @@ def send_mail(request):
                                            [[['name','=','SO077']]])
     p = odoo.env['sale.order'].browse(is_customer)
     for pu in p:
-        print('--------purchase-------', pu.order_line.price_unit)
+        # print('--------purchase-------', pu.order_line.price_unit)
         products = [line for line in pu.order_line]
-        print('----list product----', products)
+        # print('----list product----', products)
         x = 0
         y = 0
         for i in products:
             x = x + (i.price_unit)
             x = round(x, 2)
-            print('---------somme price_unit----', x)
+            # print('---------somme price_unit----', x)
         for i in products:
             y = y + (i.product_id.lst_price)
-            print('---------somme lst_price----', y)
+            # print('---------somme lst_price----', y)
 
-            if 'delete' in request.POST:
-                remove = request.POST.get('del')
-                print('---remove-------', remove)
-                models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_cancel', order)
-                models.execute_kw(db, uid, odoopassword,
-                                      'sale.order', 'write', [order,
-                                                              {'order_line': [(2, int(remove))]}])
-                models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_draft', order)
-                models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_confirm', order)
-                return HttpResponseRedirect("/home/")
+        if 'delete' in request.POST:
+            remove = request.POST.get('del')
+            remove_price = request.POST.get('del_p')
+            remove_name = request.POST.get('del_n')
+            print('---remove-------', remove)
+            models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_cancel', order)
+            models.execute_kw(db, uid, odoopassword,
+                                  'sale.order', 'write', [order,
+                                                          {'order_line': [(2, int(remove))]}])
+            models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_draft', order)
+            models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_confirm', order)
+            return HttpResponseRedirect("/send/")
         return render(request, 'eshop/send.html', {'product': products, 'somme':x,'lst_price':y})
     return render(request,'eshop/send.html')
 
@@ -217,12 +226,12 @@ class UserFormView(View):
                 if user.is_active:
                     login(request, user)
                     #base_template_name = 'base.html'
-                    return render(request, 'eshop/home.html', {})
+                    return redirect('eshop:edit_profile')
 
         return render(request, self.template_name, {'form': form})
 
 
-def update_profile(request,username):
+def update_profile(request):
     odoo = odoorpc.ODOO('localhost', port=8069)
     odoo.login('odifydb', 'admin', 'admin')
     #user = User.objects.get(username=username)
@@ -248,12 +257,11 @@ def update_profile(request,username):
                 {'image': image_64_encode,
                  'mobile':request.user.profile.mobile,
                  'street':request.user.profile.street,
-                 'street2':request.user.profile.city,
+                 'street2':request.user.profile.street2,
                  'function':request.user.profile.job,
+                 'city': request.user.profile.city,
+                 'country_id':int(request.user.profile.country),
                  'title':title_request,}])
-
-                # models.execute_kw(db, uid, odoopassword, 'res.partner', 'write', [[116],
-                #                                                                {'title': 3,}])
             return redirect('eshop:home')
 
         else:

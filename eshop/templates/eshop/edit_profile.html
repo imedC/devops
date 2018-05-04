@@ -1,26 +1,6 @@
-<!DOCTYPE html>
+{%extends 'eshop/base.html' %}
 {% load staticfiles %}
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<head>
-    <meta charset="UTF-8">
-    <title>edit</title>
-         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
-<!--<form enctype="multipart/form-data" method="post" action="">-->
-  <!--{% csrf_token %}-->
-
-    <!--<button class="btn btn-secondary">{{profile_form.avatar}}<i class="fa fa-upload" aria-hidden="true"></i> </button>-->
-
-    <!--<div class="form-group ">-->
-        <!--<button type="submit" id="button" class="btn btn-info btn-large login-button">Save changes</button>-->
-
-    <!--</div>-->
-
-<!--</form>-->
-
+{% block body %}
 <div class="container">
   <form enctype="multipart/form-data" method="post" action="">
           {% csrf_token %}
@@ -30,7 +10,12 @@
       <!-- left column -->
       <div class="col-md-3">
         <div class="text-center">
-          <img src="{{request.user.profile.avatar.url }}"  width="80" height="80" class="avatar img-circle" alt="avatar">
+              {% if request.user.profile.avatar %}
+      <img src="{{request.user.profile.avatar.url }}"  width="80" height="80" class="avatar img-circle" alt="avatar">
+      {%else%}
+      <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRuLHkpwz9uatkkrzR6FvSyO-AbKAPqTwu8pHrUx2BAtYBjpDCS-Q" title="John Doe" alt="John Doe" class="avatar img-circle" width="120px" height="150px">
+
+            {%endif%}
           <h6>Upload a different photo...</h6>
 
            {{profile_form.avatar}}
@@ -40,17 +25,23 @@
       <!-- edit form column -->
       <div class="col-md-9 personal-info">
         <h3>Personal info</h3>
-
+          <hr>
         <div class="form-group">
-            <label class="col-lg-3 control-label">Street, city:</label>
+            <label class="col-lg-3 control-label">Street:</label>
             <div class="col-lg-8">
               {{profile_form.street}}<br>
             </div>
           </div>
         <div class="form-group">
-            <label class="col-lg-3 control-label">Country:</label>
+            <label class="col-lg-3 control-label">City:</label>
             <div class="col-lg-8">
               {{profile_form.city}}<br>
+            </div>
+          </div>
+                  <div class="form-group">
+            <label class="col-lg-3 control-label">Country:</label>
+            <div class="col-lg-8">
+              {{profile_form.country}}<br>
             </div>
           </div>
                 <div class="form-group">
@@ -71,41 +62,7 @@
               {{profile_form.job}}<br>
             </div>
           </div>
-          <!--<div class="form-group">-->
-            <!--<label class="col-lg-3 control-label">Email:</label>-->
-            <!--<div class="col-lg-8">-->
-              <!--<input class="form-control" type="text" value="janesemail@gmail.com">-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="form-group">-->
-            <!--<label class="col-lg-3 control-label">Time Zone:</label>-->
-            <!--<div class="col-lg-8">-->
-              <!--<div class="ui-select">-->
-                <!--<select id="user_time_zone" class="form-control">-->
-                  <!--<option value="Monsieur">(GMT-10:00) Hawaii</option>-->
-                  <!--<option value="Mademoiselle">(GMT-09:00) Alaska</option>-->
-                  <!--<option value="Pacific Time (US &amp; Canada)">(GMT-08:00) Pacific Time (US &amp; Canada)</option>-->
-                  <!--<option value="Professeur">(GMT-07:00) Arizona</option>-->
-                  <!--<option value="Mountain Time (US &amp; Canada)">(GMT-07:00) Mountain Time (US &amp; Canada)</option>-->
-                  <!--<option value="Central Time (US &amp; Canada)" selected="selected">(GMT-06:00) Central Time (US &amp; Canada)</option>-->
-                  <!--<option value="Eastern Time (US &amp; Canada)">(GMT-05:00) Eastern Time (US &amp; Canada)</option>-->
-                  <!--<option value="Indiana (East)">(GMT-05:00) Indiana (East)</option>-->
-                <!--</select>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="form-group">-->
-            <!--<label class="col-md-3 control-label">Username:</label>-->
-            <!--<div class="col-md-8">-->
-              <!--<input class="form-control" type="text" value="janeuser">-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="form-group">-->
-            <!--<label class="col-md-3 control-label">Password:</label>-->
-            <!--<div class="col-md-8">-->
-              <!--<input class="form-control" type="password" value="11111122333">-->
-            <!--</div>-->
-          <!--</div>-->
+
           <div class="form-group">
             <label class="col-md-3 control-label"></label>
             <div class="col-md-8">
@@ -119,5 +76,4 @@
     </form>
 </div>
 <hr>
-</body>
-</html>
+{% endblock %}

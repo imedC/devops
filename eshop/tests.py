@@ -64,15 +64,47 @@ class ProductModelTests(TestCase):
         #                   'sale.order', 'write', [order,
         #                                           {'order_line': [(2, 234, False)]}])
 
-        aa = models.execute_kw(db, uid, odoopassword, 'res.partner',
-                                       'search', [[['name', '=', 'test']]])
-        p = odoo.env['res.partner'].browse(aa)
-        # print ('-----title------',p )
-        x = models.execute_kw(db, uid, odoopassword,
-                           'res.partner.title', 'search_read', [[]], {'fields': ['name']})
-        models.execute_kw(db, uid, odoopassword, 'res.partner.title', 'unlink', [8])
+        # aa = models.execute_kw(db, uid, odoopassword, 'res.partner',
+        #                                'search', [[['name', '=', 'test']]])
+        # p = odoo.env['res.partner'].browse(aa)
+        # # print ('-----title------',p )
+        # x = models.execute_kw(db, uid, odoopassword,
+        #                    'res.partner.title', 'search_read', [[]], {'fields': ['name']})
+        # models.execute_kw(db, uid, odoopassword, 'res.partner.title', 'unlink', [8])
+        #
+        # print ('-----title------',x )
+        is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
+                                        'search', [[['partner_id', '=', 'test']]])
+        facture_search = models.execute_kw(db, uid, odoopassword,
+                                           'account.invoice', 'search', [[['number', '=', 'INV/2018/0006']]])
+        p = odoo.env['sale.order'].browse(is_customer)
+        x = odoo.env['account.invoice'].browse(facture_search)
+        d = {}
+        # price = []
+        for pu in p:
+            print('--------purchase-------', pu)
+            products = [line for line in pu.order_line]
+            print('----list product----', products)
+            for i in products:
+                # print(i.name, i.price_unit)
+                d[(i.id,i.product_id.name)] = i.price_unit
+        # for i in d.items():
+        #     x.write({'invoice_line_ids': [(0, 0,{
+        #                                    'name': i[0][1],
+        #                                     'account_id':1,
+        #                                     'price_unit':i[1],
+        #                                     })]})
 
-        print ('-----title------',x )
+        custom = odoo.env['res.country'].search([])
+        for x  in custom:
+
+            y = odoo.execute('res.country', 'read',[x], ['code'])
+            print(y)
+        # for order in custom.browse(order_ids):
+            # print(order.name)
+
+
+
 # class ProfileTestCase(TestCase):
 #
 #     def setUp(self):

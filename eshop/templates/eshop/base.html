@@ -52,7 +52,7 @@
                                 <a href="#" data-toggle="modal" data-target="#login-modal" class="login-btn">
                                     <i class="fa fa-sign-in"></i>
                                     <span class="d-none d-md-inline-block">Sign In</span></a>
-                                <a href="customer-register.html" class="signup-btn"><i class="fa fa-user"></i>
+                                <a href="{% url 'eshop:register' %}" class="signup-btn"><i class="fa fa-user"></i>
                                     <span class="d-none d-md-inline-block">Sign Up</span></a>
                                 {% else %}
                                 <a href="{% url 'eshop:logout' %}" class="signup-btn"><i class="fa fa-user"></i>
@@ -124,9 +124,13 @@
                       <li><a href="{% url 'eshop:products' %}">Shop page</a></li>
                       <li id="send"><a href="{% url 'eshop:send' %}">Checkout</a></li>
                       <li><a href="">Cart</a></li>
-                      <li><a href="{% url 'eshop:edit_profile' request.user.username %}">
-                          <img src="{{ request.user.profile.avatar.url }}" alt="John Doe" width="20px" height="20px">
-                              Profile</a></li>
+                      <li><a href="{% url 'eshop:edit_profile' %}">
+                            {% if request.user.profile.avatar %}
+                                        <img src="{{ request.user.profile.avatar.url }}" title="John Doe" alt="John Doe" width="20px" height="20px">
+                                        {%else%}
+                                        <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRuLHkpwz9uatkkrzR6FvSyO-AbKAPqTwu8pHrUx2BAtYBjpDCS-Q" title="John Doe" alt="John Doe" width="30px" height="25px">
+                                        {%endif%}
+                              {{request.user}}</a></li>
 
                   </ul>
                   <a href="./"><img src="/static/eshop/img/logo.png" style="max-width:90px;float:right;"></a>

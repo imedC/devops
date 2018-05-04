@@ -2,7 +2,14 @@ from django.contrib.auth.models import User
 from django import forms
 from .models import Profile
 
-
+TN = '221'
+FR = '75'
+US = '233'
+pays = (
+    (TN, 'Tunisie'),
+    (FR, 'France'),
+    (US, 'USA'),
+)
 class UserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
@@ -15,7 +22,7 @@ class UserForm(forms.ModelForm):
         data = self.cleaned_data
         if data["username"] == True:
             raise forms.ValidationError({'username': ["username already exists"]})
-        if data["password"] == "":
+        elif data["password"] == "":
             raise forms.ValidationError({'password': ["Password invalid."]})
         elif data["password"] != data["password2"]:
             raise forms.ValidationError({'password': ["Passwords must be the same."]})
@@ -52,6 +59,12 @@ class ProfileForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     street = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    street2 = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    country = forms.ChoiceField(required=False,
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        choices=Profile.pays,
+    )
     city = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     title = forms.CharField(
@@ -60,5 +73,5 @@ class ProfileForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     class Meta:
         model = Profile
-        fields = ('avatar','street','city','mobile','job','title')
+        fields = ('avatar','street','city','country', 'mobile','job','title')
 

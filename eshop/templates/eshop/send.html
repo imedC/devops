@@ -14,8 +14,8 @@
                             <th scope="col"> </th>
                             <th scope="col">Product</th>
                             <th scope="col" class="text-center">Quantity</th>
-                            <th scope="col" class="text-center">Total price</th>
-                            <th scope="col" class="text-right">Untaxed Amount</th>
+                            <th scope="col" class="text-center"> Price</th>
+                            <!--<th scope="col" class="text-right">Untaxed Amount</th>-->
                             <th> </th>
                         </tr>
                     </thead>
@@ -26,12 +26,14 @@
                             <td>{{p.product_id.name}}</td>
                             <td><input class="form-control" type="text" value="1" /></td>
                             <td class="text-center" >{{p.product_id.lst_price}} €</td>
-                            <td class="text-right">{{p.price_unit}} €</td>
+                            <!--<td class="text-right">{{p.price_unit}} €</td>-->
                             <td class="text-right">
 								<form method="POST">
 									{% csrf_token %}
 									<button type="submit" name="delete"  class="btn btn-sm btn-danger"><i class="fa fa-trash"></i>
 									<input type="hidden" name="del" value="{{p.id}}"/>
+									<input type="hidden" name="del_n" value="{{p.name}}"/>
+									<input type="hidden" name="del_p" value="{{p.product_id.lst_price}}"/>
 									</button></form> </td>
                         </tr>
 					{%endfor%}
@@ -56,7 +58,7 @@
                             <td></td>
                             <td></td>
                             <td class="text-center"><strong>{{lst_price}} €</strong></td>
-                            <td class="text-right"><strong>{{somme}} €</strong></td>
+                            <!--<td class="text-right"><strong>{{somme}} €</strong></td>-->
                             <td></td>
                         </tr>
                     </tbody>
