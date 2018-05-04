@@ -2,14 +2,7 @@ from django.contrib.auth.models import User
 from django import forms
 from .models import Profile
 
-TN = '221'
-FR = '75'
-US = '233'
-pays = (
-    (TN, 'Tunisie'),
-    (FR, 'France'),
-    (US, 'USA'),
-)
+
 class UserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)

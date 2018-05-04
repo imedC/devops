@@ -86,11 +86,13 @@ class ProductModelTests(TestCase):
             products = [line for line in pu.order_line]
             print('----list product----', products)
             for i in products:
-                # print(i.name, i.price_unit)
-                d[(i.id,i.product_id.name)] = i.price_unit
+                print(i.name, i.price_unit)
+                d[(i.id,i.name,i.product_id.id)] = i.price_unit
+                print(d)
         # for i in d.items():
         #     x.write({'invoice_line_ids': [(0, 0,{
-        #                                    'name': i[0][1],
+        #                                     'name': i[0][1],
+        #                                     'product_id': i[0][2],
         #                                     'account_id':1,
         #                                     'price_unit':i[1],
         #                                     })]})
@@ -99,7 +101,7 @@ class ProductModelTests(TestCase):
         for x  in custom:
 
             y = odoo.execute('res.country', 'read',[x], ['code'])
-            print(y)
+            # print(y)
         # for order in custom.browse(order_ids):
             # print(order.name)
 

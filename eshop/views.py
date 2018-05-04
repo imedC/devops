@@ -114,7 +114,7 @@ def send_mail(request):
 
         models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_quotation_send', order)
         print('order', order)
-        search_user_id = odoo.env['res.partner'].search([['partner_id', '=', request.user.username]])
+        search_user_id = odoo.env['res.partner'].search([['name', '=', request.user.username]])
         print('search_user_id', search_user_id)
         # TODO
         # Search for mail template
