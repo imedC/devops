@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'eshop.apps.RestapiConfig',
-    'djstripe',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +52,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+DOWNLOADER_MIDDLEWARES = {
+    'pfeproject.middlewares.selenium.SeleniumMiddleware': 200
+}
 
 ROOT_URLCONF = 'pfeproject.urls'
 

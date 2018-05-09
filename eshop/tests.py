@@ -4,42 +4,37 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
 from django.contrib.auth.models import User
 from .models import Profile
-import odoorpc
-odoo = odoorpc.ODOO('localhost', port=8069)
-odoo.login('odifydb', 'admin', 'admin')
-url = 'http://localhost:8069'
-db = 'odifydb'
-odooname = 'admin'
-odoopassword = 'admin'
-common = client.ServerProxy('{}/xmlrpc/2/common'.format(url))
-uid = common.authenticate(db, odooname, odoopassword, {})
-models = client.ServerProxy('{}/xmlrpc/2/object'.format(url))
+# import odoorpc
+# odoo = odoorpc.ODOO('localhost', port=8069)
+# odoo.login('odifydb', 'admin', 'admin')
+# url = 'http://localhost:8069'
+# db = 'odifydb'
+# odooname = 'admin'
+# odoopassword = 'admin'
+# common = client.ServerProxy('{}/xmlrpc/2/common'.format(url))
+# uid = common.authenticate(db, odooname, odoopassword, {})
+# models = client.ServerProxy('{}/xmlrpc/2/object'.format(url))
 
 class MySeleniumTests(StaticLiveServerTestCase):
-
+    # fixtures = ['test-data.json']
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
         cls.selenium = WebDriver()
-        cls.selenium.implicitly_wait(10)
+        super(MySeleniumTests, cls).setUpClass()
+        cls.selenium.implicitly_wait(20)
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.selenium.quit()
-        super().tearDownClass()
 
-    def test_login(self):
-        self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+
+    def test_hello(self):
+        self.selenium.get('http://fogits:88/login/')
         username_input = self.selenium.find_element_by_name("username")
-        username_input.send_keys('myuser')
         password_input = self.selenium.find_element_by_name("password")
-        password_input.send_keys('secret')
         self.selenium.find_element_by_xpath('//input[@value="Log In"]').click()
 
-class ProductModelTests(TestCase):
-
-    def test_product(self):
+# class ProductModelTests(TestCase):
+#
+#     def test_product(self):
 
 
         # is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
@@ -73,22 +68,22 @@ class ProductModelTests(TestCase):
         # models.execute_kw(db, uid, odoopassword, 'res.partner.title', 'unlink', [8])
         #
         # print ('-----title------',x )
-        is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
-                                        'search', [[['partner_id', '=', 'test']]])
-        facture_search = models.execute_kw(db, uid, odoopassword,
-                                           'account.invoice', 'search', [[['number', '=', 'INV/2018/0006']]])
-        p = odoo.env['sale.order'].browse(is_customer)
-        x = odoo.env['account.invoice'].browse(facture_search)
-        d = {}
-        # price = []
-        for pu in p:
-            print('--------purchase-------', pu)
-            products = [line for line in pu.order_line]
-            print('----list product----', products)
-            for i in products:
-                print(i.name, i.price_unit)
-                d[(i.id,i.name,i.product_id.id)] = i.price_unit
-                print(d)
+        # is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
+        #                                 'search', [[['partner_id', '=', 'test']]])
+        # facture_search = models.execute_kw(db, uid, odoopassword,
+        #                                    'account.invoice', 'search', [[['number', '=', 'INV/2018/0006']]])
+        # p = odoo.env['sale.order'].browse(is_customer)
+        # x = odoo.env['account.invoice'].browse(facture_search)
+        # d = {}
+        # # price = []
+        # for pu in p:
+        #     print('--------purchase-------', pu)
+        #     products = [line for line in pu.order_line]
+        #     print('----list product----', products)
+        #     for i in products:
+        #         print(i.name, i.price_unit)
+        #         d[(i.id,i.name,i.product_id.id)] = i.price_unit
+        #         print(d)
         # for i in d.items():
         #     x.write({'invoice_line_ids': [(0, 0,{
         #                                     'name': i[0][1],

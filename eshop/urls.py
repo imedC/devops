@@ -4,7 +4,7 @@ from . import views
 app_name = 'eshop'
 
 urlpatterns = [
-    url('^home/$', views.home, name='home'),
+    url(r'^home/$', views.home, name='home'),
     url(r'^login/$', views.login_user, name='login'),
     url(r'^logout/$', views.logout_user, name='logout'),
     url(r'^register/$', views.UserFormView.as_view(), name = 'register'),
