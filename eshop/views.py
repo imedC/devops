@@ -87,9 +87,9 @@ def home(request):
                     request.session['order'] = order
                     request.session['product'] = product
                 # print (order)
-                    return redirect('eshop:send')
+            return redirect('eshop:send')
     return render(request, 'eshop/home.html',
-                  {'product': record[:8], 'category': category, 'product_range': record[12:16], })
+                  {'product': record, 'category': category, 'product_range': record[12:16], })
 
 
 

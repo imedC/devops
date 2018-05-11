@@ -64,6 +64,7 @@ class ProfileForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     mobile = forms.IntegerField(
         widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    avatar = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
     class Meta:
         model = Profile
         fields = ('avatar','street','city','country', 'mobile','job','title')

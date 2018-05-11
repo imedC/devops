@@ -124,13 +124,15 @@
                       <li><a href="{% url 'eshop:products' %}">Shop page</a></li>
                       <li id="send"><a href="{% url 'eshop:send' %}">Checkout</a></li>
                       <li><a href="">Cart</a></li>
-                      <li><a href="{% url 'eshop:edit_profile' %}">
+                      {% if request.user.is_authenticated %}
                             {% if request.user.profile.avatar %}
-                                        <img src="{{ request.user.profile.avatar.url }}" title="John Doe" alt="John Doe" width="20px" height="20px">
-                                        {%else%}
-                                        <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRuLHkpwz9uatkkrzR6FvSyO-AbKAPqTwu8pHrUx2BAtYBjpDCS-Q" title="John Doe" alt="John Doe" width="30px" height="25px">
+                      <li><a href="{% url 'eshop:edit_profile' %}">
+            <img src="{{ request.user.profile.avatar.url }}" title="John Doe" alt="John Doe" width="20px" height="20px">
+                          {{request.user}}
+                      </a></li>
                                         {%endif%}
-                              {{request.user}}</a></li>
+                                        {%endif%}
+
 
                   </ul>
                   <a href="./"><img src="/static/eshop/img/logo.png" style="max-width:90px;float:right;"></a>
