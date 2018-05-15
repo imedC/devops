@@ -97,21 +97,13 @@ def send_mail(request):
     odoo = odoorpc.ODOO('localhost', port=8069)
     print(odoo.db.list())
     odoo.login('odifydb', 'admin', 'admin')
-    facture_search = models.execute_kw(db, uid, odoopassword,
-                                       'account.invoice', 'search', [[['partner_id', '=', request.user.username]]])
-
+    search_user_id = odoo.env['res.partner'].search([['name', '=', request.user.username]])
     is_customer = odoo.env['sale.order'].search([['partner_id', '=', request.user.username]])
     order = [order for order in is_customer]
-    facture = [facture for facture in facture_search]
+    # facture = [facture for facture in facture_search]
     print('-----is customer----', order)
-    #order = request.session['order']
-    # product = request.session['product']
-    # print('-------------record------------', product)
     #if request.method == 'POST':
     if 'send_mail' in request.POST:
-        # models.execute_kw(db, uid, odoopassword,
-        #                   'account.invoice', 'create', [{'partner_id': request.user.username}])
-
         models.execute_kw(db, uid, odoopassword, 'sale.order', 'action_quotation_send', order)
         print('order', order)
         search_user_id = odoo.env['res.partner'].search([['name', '=', request.user.username]])
@@ -128,7 +120,30 @@ def send_mail(request):
         for o in order:
             Partner = odoo.env['mail.template'].browse(template_id).send_mail(o, force_send=True)
             print('-----------partner-------------', Partner)
-            return HttpResponseRedirect("/send/")
+            # facture_search = models.execute_kw(db, uid, odoopassword,
+            #                                     'account.invoice', 'search', [[['number', '=', 'INV/2018/0006']]])
+            for q in search_user_id:
+                facture_search = odoo.env['account.invoice'].create({'partner_id': q})
+                p = odoo.env['sale.order'].browse(is_customer)
+                x = odoo.env['account.invoice'].browse(facture_search)
+                d = {}
+                # price = []
+                for pu in p:
+                    print('--------purchase-------', pu)
+                    products = [line for line in pu.order_line]
+                    print('----list product----', products)
+                    for i in products:
+                        print(i.name, i.price_unit)
+                        d[(i.id,i.name,i.product_id.id)] = i.price_unit
+                        print(d)
+                for i in d.items():
+                    x.write({'invoice_line_ids': [(0, 0,{
+                                                    'name': i[0][1],
+                                                    'product_id': i[0][2],
+                                                    'account_id':1,
+                                                    'price_unit':i[1],
+                                                    })]})
+                return HttpResponseRedirect("/send/")
     purchase = models.execute_kw(db, uid, odoopassword,
                                            'sale.order', 'search',
                                            [[['name','=','SO077']]])

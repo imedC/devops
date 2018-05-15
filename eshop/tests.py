@@ -3,24 +3,22 @@ from xmlrpc import client
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+import time
 
 from django.contrib.auth.models import User
 from .models import Profile
 
 
-# import odoorpc
-# odoo = odoorpc.ODOO('localhost', port=8069)
-# odoo.login('odifydb', 'admin', 'admin')
-# url = 'http://localhost:8069'
-# db = 'odifydb'
-# odooname = 'admin'
-# odoopassword = 'admin'
-# common = client.ServerProxy('{}/xmlrpc/2/common'.format(url))
-# uid = common.authenticate(db, odooname, odoopassword, {})
-# models = client.ServerProxy('{}/xmlrpc/2/object'.format(url))
+import odoorpc
+odoo = odoorpc.ODOO('localhost', port=8069)
+odoo.login('odifydb', 'admin', 'admin')
+url = 'http://localhost:8069'
+db = 'odifydb'
+odooname = 'admin'
+odoopassword = 'admin'
+common = client.ServerProxy('{}/xmlrpc/2/common'.format(url))
+uid = common.authenticate(db, odooname, odoopassword, {})
+models = client.ServerProxy('{}/xmlrpc/2/object'.format(url))
 
 
 class MySeleniumTests(StaticLiveServerTestCase):
@@ -45,6 +43,20 @@ class MySeleniumTests(StaticLiveServerTestCase):
         submit = self.selenium.find_element_by_name("login-submit")
         submit.send_keys(Keys.RETURN)
         self.selenium.find_element_by_xpath("//form[@id='form-id']//input[@name='product' and @value='28']").submit()
+
+        time.sleep(10)
+        is_customer = models.execute_kw(db, uid, odoopassword, 'sale.order',
+                                        'search', [[['partner_id', '=', 'test']]])
+        p = odoo.env['sale.order'].browse(is_customer)
+        for pu in p:
+            products = [line for line in pu.order_line]
+            somme = 0
+            for i in products:
+                price =i.price_unit
+                name = i.product_id.name
+                somme = somme + price
+                print('Name of the product : {},price : {}'.format(name,price))
+            print('_____Somme_____', round(somme, 2))
         self.selenium.find_element_by_xpath("//input[@name='send_mail'] ").submit()
 
 
