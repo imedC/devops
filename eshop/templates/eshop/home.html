@@ -1,6 +1,7 @@
 {%extends 'eshop/base.html' %}
 {% load staticfiles %}
 {% block body %}
+
 <div class="slider-area" xmlns="http://www.w3.org/1999/html">
             <!-- Slider -->
             <div class="block-slider block-slider4">
@@ -55,7 +56,7 @@
         </div>
     </div> <!-- End promo area -->
     
-    <div class="maincontent-area">
+   <div class="maincontent-area">
         <div class="zigzag-bottom"></div>
         <div class="container">
             <div class="row">
@@ -69,7 +70,6 @@
                                     <img src="data:image/png;base64,{{p.image_medium}}" alt="">
                                     <div class="product-hover">
                                         {% if not user.is_authenticated %}
-                                        <!--<button class="add-to-cart-link" formaction="/register" >Add to cart</button>-->
                                         <form action="/login/">
                                             <button class="add-to-cart-link" type="submit"> Add to cart
                                         </button>
@@ -77,18 +77,19 @@
                                         {%else%}
                                         <form id="form-id"  action="" method="POST">
                                             {% csrf_token %}
-                                            <button class="add-to-cart-link" type="submit" name="product" value="{{p.id}}" >
+                                                <button class="add-to-cart-link" type="submit">
+                                                <input  type="hidden" name="product" value="{{p.id}}" >
                                                 <input type="hidden" name="product_name" value="{{p.name}}">
                                                 <input type="hidden" name="product_price" value="{{p.lst_price}}">
-                                                Add to cart</button>
+                                                    Add to cart</button>
                                         </form>
                                         {%endif%}
                                         <a href="#" class="view-details-link"><i class="fa fa-link"></i> See details</a>
                                     </div>
                                 </div>
-                                
-                                <h2><a href="single-product.html">{{p.name}}</a></h2>
-                                
+
+                                <h2><a href="single-product.html">{{p.id}}</a></h2>
+
                                 <div class="product-carousel-price">
                                     <ins>{{p.lst_price}} €</ins>
                                 </div>
@@ -100,7 +101,7 @@
                 </div>
             </div>
         </div>
-    </div> <!-- End main content area -->
+    </div>
     
     <div class="brands-area">
         <div class="zigzag-bottom"></div>

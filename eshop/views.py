@@ -48,11 +48,9 @@ def home(request):
     print ('record:_______',record[6]['id'])
     for q in search_user_id:
         if request.method == 'POST':
-            product = request.POST['product']
-            product_name = request.POST['product_name']
-            product_price = request.POST['product_price']
-            #record1 = request.POST.get(record)
+            product = request.POST.get('product')
             print('_________product_____', product)
+            product_name = request.POST.get('product_name')
             #print('_________product_____', record1)
             is_customer = odoo.env['sale.order'].search([['partner_id', '=', request.user.username]])
             facture_search = odoo.env['account.invoice'].search([['partner_id', '=', request.user.username]])
@@ -72,9 +70,11 @@ def home(request):
                 # 		  'sale.order', 'search',
                 # 		  [[['partner_id', '=', request.user.username]]])
                 for order in is_customer:
+                    print('--------product_name', product)
                     confirm = models.execute_kw(db, uid, odoopassword,
                               'sale.order', 'write', [[order],
                                                       {'order_line': [(0, 0, {'product_id': int(product)})]}])
+
                     customer_fac = models.execute_kw(db, uid, odoopassword,
                                                      'account.invoice', 'search', [[['number', '=', 'INV/2018/0006']]])
                     x = odoo.env['account.invoice'].browse(customer_fac)
