@@ -8,20 +8,33 @@
     <h1>Edit Profile</h1>
   	<hr>
 	<div class="row">
-      <!-- left column -->
       <div class="col-md-3">
         <div class="text-center">
-              {% if request.user.profile.avatar %}
             <label id="labelfile" for="id_avatar"><img src="{% static 'eshop/img/outbox.png' %}"></label>
-      <img src="{{request.user.profile.avatar.url }}"  width="100" height="100" class="avatar img-circle" alt="avatar">
+              {% if request.user.profile.avatar %}
+      <img src="{{request.user.profile.avatar.url }}"  width="120" class="img-edit avatar img-circle" alt="avatar">
       {%else%}
-      <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRuLHkpwz9uatkkrzR6FvSyO-AbKAPqTwu8pHrUx2BAtYBjpDCS-Q" title="John Doe" alt="John Doe" class="avatar img-circle" width="120px" height="150px">
+      <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRuLHkpwz9uatkkrzR6FvSyO-AbKAPqTwu8pHrUx2BAtYBjpDCS-Q" class="avatar img-circle" width="120px" height="150px">
+{{profile_form.avatar}}
 
-            {%endif%}<br><br>
-            <font style="font-size:0px">
-            <input type="hidden" value="{{profile_form.avatar}}"/></font>
+            {%endif%}<font style="font-size:0px"><input type="hidden" value="{{profile_form.avatar}}"/></font><br><br>
+
         </div>
+</div>
+        <!--      <div class="col-md-3">
+        <div class="text-center">
+                {% if request.user.profile.avatar %}
+            &lt;!&ndash;<label id="labelfile" for="id_avatar"><img src="{% static 'eshop/img/outbox.png' %}"></label>&ndash;&gt;
+      <img src="{{request.user.profile.avatar.url }}"  width="120" height="150" class="avatar img-circle">
+      {%else%}
+    <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRuLHkpwz9uatkkrzR6FvSyO-AbKAPqTwu8pHrUx2BAtYBjpDCS-Q" class="avatar img-circle" width="120px" height="150px">
       </div>
+        {%endif%}
+
+            <i class="fa fa-upload" aria-hidden="true">{{profile_form.avatar}}</i>
+            <br><br>
+      </div>
+    </div>-->
 
       <!-- edit form column -->
       <div class="col-md-9 personal-info">

@@ -34,7 +34,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
     #     cls.selenium.quit()
     #     super().tearDownClass()
 
-    def test_login(self):
+    def test_application(self):
         self.selenium.get('http://localhost:8000/login/')
         username_input = self.selenium.find_element_by_name("username")
         password_input = self.selenium.find_element_by_name("password")

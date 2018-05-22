@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'', include('eshop.urls', namespace='eshop')),
     # url(r'^payments/', include('djstripe.urls', namespace="djstripe")),
-    url('home/', admin.site.urls),
+    url('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:

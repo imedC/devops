@@ -94,9 +94,6 @@ def home(request):
 
 
 def send_mail(request):
-    odoo = odoorpc.ODOO('localhost', port=8069)
-    print(odoo.db.list())
-    odoo.login('odifydb', 'admin', 'admin')
     search_user_id = odoo.env['res.partner'].search([['name', '=', request.user.username]])
     is_customer = odoo.env['sale.order'].search([['partner_id', '=', request.user.username]])
     order = [order for order in is_customer]
@@ -247,8 +244,6 @@ class UserFormView(View):
 
 
 def update_profile(request):
-    odoo = odoorpc.ODOO('localhost', port=8069)
-    odoo.login('odifydb', 'admin', 'admin')
     #user = User.objects.get(username=username)
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)

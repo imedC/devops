@@ -1237,6 +1237,11 @@ border-color:#b8d638!important;}
     width: 80%;z-index: 99;transition: .4s;
 }
 
+
+.img-edit {
+height:150px!important;
+}
+
 #id_avatar {
 	width: 0.1px;
 	height: 0.1px;
@@ -1245,7 +1250,7 @@ border-color:#b8d638!important;}
 	position: absolute;
 	z-index: -1;
 }
-#labelfile {
+#labelfile, #labelfile2 {
 
 
       display: inline-block;
@@ -1256,12 +1261,10 @@ border-color:#b8d638!important;}
       right: 0;
       height: 100%;
       width: 100%;
-     /*filter: brightness(1.8)*/;
-}
-/*#labelfile:hover {
-    background-color: red;
-}*/
+      }
 
- #labelfile {
+#labelfile, #labelfile2 {
 cursor: pointer;
 }
+
+
